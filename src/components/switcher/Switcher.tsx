@@ -13,7 +13,7 @@ type Props = {
 }
 
 export const Switcher: React.FC<Props> = ({currentData, feedList, changeFeed, getTranslation}) => {
-  if (!currentData){
+  if (!currentData) {
     return <h3>Ingen data tilgjengelig</h3>
   }
 
@@ -36,7 +36,7 @@ export const Switcher: React.FC<Props> = ({currentData, feedList, changeFeed, ge
     case "station_status":
       return <TableData data={currentData.data.stations} getTranslation={getTranslation}/>;
     case "system_information":
-      return <KeyValueDataTable data={currentData.data}  getTranslation={getTranslation}/>
+      return <KeyValueDataTable data={currentData.data} getTranslation={getTranslation}/>
   }
   return <h4>Ukjent feed</h4>;
 };

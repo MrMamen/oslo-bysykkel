@@ -1,3 +1,5 @@
+Oslo-bysykkel viser informasjon om byskylene basert på sanntidsinformasjon. 
+
 
 ## Tilgjengelige scripts
 

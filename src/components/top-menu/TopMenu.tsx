@@ -1,6 +1,5 @@
 import * as React from "react";
 import {getLangauge} from "../../utils/i18n";
-import "./TopMenu.css";
 
 interface Props {
   languages?: string[];
