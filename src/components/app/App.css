@@ -62,6 +62,11 @@
   color: #fcff29;
   text-decoration: none;
 }
+
+.clickable {
+  cursor: pointer;
+}
+
 /* The switch - the box around the slider */
 .switch {
   position: relative;

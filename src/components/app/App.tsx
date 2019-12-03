@@ -66,7 +66,7 @@ const App: React.FC = () => {
   const getTranslation = (key: string) => {
     return getTableHeader(selectedLanguage, key);
   };
-  const knappeListe = [{name: "Vis tilgjengelige datakilder", action: hentData}];
+  const knappeListe = [{name: "📡 Vis tilgjengelige datakilder 📡", action: hentData}];
 
   return (
     <div className="App">

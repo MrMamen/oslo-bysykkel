@@ -1,5 +1,5 @@
 import * as React from "react";
-import {getLangauge} from "../../utils/i18n";
+import {getCountryEmoji, getLangauge} from "../../utils/i18n";
 
 interface Props {
   languages?: string[];
@@ -20,7 +20,7 @@ export const TopMenu: React.FC<Props> = ({languages = [], language, setLanguage,
   };
 
   const languageOptions = languages.map((langCode) => {
-    return <option value={langCode} key={langCode}>{getLangauge(langCode)}</option>
+    return <option value={langCode} key={langCode}>{getCountryEmoji(langCode)} {getLangauge(langCode)}</option>
   });
 
   const buttons = buttonList.map((btn, i) => {
@@ -28,7 +28,7 @@ export const TopMenu: React.FC<Props> = ({languages = [], language, setLanguage,
   });
 
   return <header className="App-header">
-    <div><h2>Oslo Bysykkel</h2></div>
+    <div><h2>🚴 Oslo Bysykkel 🚲</h2></div>
     <div className="actionrad">
       {buttons}
       {languages.length > 0 && <select onChange={byttSprak} value={language}>

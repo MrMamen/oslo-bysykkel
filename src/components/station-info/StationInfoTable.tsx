@@ -12,10 +12,12 @@ export const StationInfoTable: React.FC<StationInfoTableProps> = ({stations, get
   const [mapView, setMapView] = React.useState(false);
 
   return <>
-    <div style={{display: "inline-block"}}>Se tabell <label className="switch">
+    <div style={{display: "inline-block"}}>
+      <span className="clickable" onClick={() => setMapView(false)}>Se tabell 📋 </span><label
+      className="switch">
       <input type="checkbox" checked={mapView}/>
       <span className="slider" onClick={() => setMapView(!mapView)}></span>
-    </label> Se kart
+    </label><span className="clickable" onClick={() => setMapView(true)}> 🗺️ Se kart</span>
     </div>
     {mapView ? <CitybikeMap stations={stations}/> :
       <TableData data={stations} getTranslation={getTranslation}/>

@@ -15,7 +15,9 @@ type Props = {
 
 export const Switcher: React.FC<Props> = ({currentData, feedList, changeFeed, getTranslation}) => {
   if (!currentData) {
-    return <h3>Ingen data tilgjengelig</h3>
+    return <><h3>⛔ Ingen data tilgjengelig. ⛔</h3>
+      <p>Forsøke å tykke «Vis tilgjengelige datakilder»</p>
+    </>
   }
 
   const onClickFeedType = (feed: Feed) => {
