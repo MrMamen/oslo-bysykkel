@@ -23,17 +23,16 @@ export const TopMenu: React.FC<Props> = ({languages = [], language, setLanguage,
     return <option value={langCode} key={langCode}>{getLangauge(langCode)}</option>
   });
 
-  const buttons = buttonList.map((btn,i)=>{
+  const buttons = buttonList.map((btn, i) => {
     return <button onClick={btn.action} key={i}>{btn.name}</button>
-  })
-
+  });
 
   return <header className="App-header">
-    <div><h2>Data</h2></div>
+    <div><h2>Oslo Bysykkel</h2></div>
     <div className="actionrad">
       {buttons}
       {languages.length > 0 && <select onChange={byttSprak} value={language}>
-          <option disabled={true}>Velg språk</option>
+        <option disabled={true}>Velg språk</option>
         {languageOptions}
       </select>}
     </div>

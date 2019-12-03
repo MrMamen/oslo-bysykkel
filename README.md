@@ -1,9 +1,8 @@
 Oslo-bysykkel viser informasjon om byskylene basert på sanntidsinformasjon. 
 
+`yarn` og `node` må være installert.
 
-## Tilgjengelige scripts
-
-Tilgjengelige kommandoer:
+## Tilgjengelige kommandoer
 
 ### `yarn start`
 

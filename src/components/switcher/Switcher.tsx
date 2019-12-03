@@ -4,6 +4,7 @@ import {TableData} from '../generic-tables/TableData';
 import {KeyValueDataTable} from "../generic-tables/KeyValueDataTable";
 import {CurrentData} from "../app/App";
 import {getJson} from "../../utils/fetch";
+import {StationInfoTable} from "../station-info/StationInfoTable";
 
 type Props = {
   currentData?: CurrentData;
@@ -33,6 +34,7 @@ export const Switcher: React.FC<Props> = ({currentData, feedList, changeFeed, ge
     case "gbfs":
       return <TableData data={feedList} getTranslation={getTranslation} onSelectRow={onClickFeedType}/>;
     case "station_information":
+      return <StationInfoTable stations={currentData.data.stations} getTranslation={getTranslation}/>
     case "station_status":
       return <TableData data={currentData.data.stations} getTranslation={getTranslation}/>;
     case "system_information":

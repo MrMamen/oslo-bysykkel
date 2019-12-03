@@ -48,7 +48,6 @@ const App: React.FC = () => {
   const [feedList, setFeedList] = React.useState<Feed[]>([]);
   const hentData = () => {
     getJson("https://gbfs.urbansharing.com/oslobysykkel.no/gbfs.json").then((res: Output<Gbfs>) => {
-      console.log(res);
       setCurrentData(
         {
           feed: "gbfs",
@@ -59,7 +58,6 @@ const App: React.FC = () => {
         langList.push(lang);
       }
       setLanguages(langList);
-
       setLanguage(langList[0]);
       setFeedList(res.data[langList[0]].feeds);
     });
