@@ -8,7 +8,7 @@ Oslo-bysykkel viser informasjon om byskylene basert på sanntidsinformasjon.
 
 Åpne [http://localhost:3000](http://localhost:3000) for å teste lokalt.
 
-Trykk «Vis tilgjengelige datakilder» for å hente data.
+Trykk «Oppfrisk datakilder» for å hente data.
 Tilgjengelige endepunker skal da fylles ut i en tabell. Hver av disse kan trykkes på for å vise data.
 Til enhver tid vil «Vis tilgjengelige datakilder» ta deg tilbake til datakildelisten.
 Tilgjengelige språk vises på toppen og kan skiftes med den nedtrtekksliste.

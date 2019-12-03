@@ -1,10 +1,17 @@
 export type FeedTypes = "gbfs"|"system_information"|"station_information"|"station_status";//|"gbfs_versions"|"free_bike_status"|"system_hours"|"system_calendar"|"system_regions"|"system_pricing_plans"|"system_alerts";
 
-export interface Output<T> {
+export interface Output<T extends FeedTypes> {
   last_updated: number;
   ttl: number;
-  version?: string; //Egentlig required
-  data: T;
+  version: string; //Required i følge spec, men mangler i faktisk data
+  data: FeedMap[T];
+}
+
+export interface FeedMap  {
+  gbfs: Gbfs,
+  system_information: SystemInformation,
+  station_information: StationInformation,
+  station_status: StationStatus
 }
 
 export interface Gbfs {

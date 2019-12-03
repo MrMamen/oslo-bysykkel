@@ -2,11 +2,10 @@ import * as React from "react";
 
 interface Props {
   data: any
-  getTranslation:(key:string) => string;
+  getTranslation: (key: string) => string;
 }
 
-
-export const KeyValueDataTable: React.FC<Props> = ({data,getTranslation}) => {
+export const KeyValueDataTable: React.FC<Props> = ({data, getTranslation}) => {
 
   const tableRows: JSX.Element[] = Object.keys(data).map((key) => {
     return <tr key={key}>
@@ -14,7 +13,6 @@ export const KeyValueDataTable: React.FC<Props> = ({data,getTranslation}) => {
       <td>{data[key]}</td>
     </tr>
   });
-
 
   return <table>
     <tbody>

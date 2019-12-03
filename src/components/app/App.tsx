@@ -2,6 +2,7 @@ import * as React from 'react';
 import './App.css';
 import {
   Feed,
+  FeedMap,
   FeedTypes,
   Gbfs,
   Output,
@@ -12,69 +13,51 @@ import {
 import {getJson} from "../../utils/fetch";
 import {Switcher} from "../switcher/Switcher";
 import {TopMenu} from "../top-menu/TopMenu";
-import {getTableHeader} from "../../utils/i18n";
-
-export interface DataFeed {
-  feed: FeedTypes
-  data: unknown
-}
-
-interface GbfsFeed extends DataFeed {
-  feed: "gbfs"
-  data: Gbfs;
-}
-
-interface SystemInfoFeed extends DataFeed {
-  feed: "system_information"
-  data: SystemInformation;
-}
-
-interface StationInfoFeed extends DataFeed {
-  feed: "station_information"
-  data: StationInformation;
-}
-
-interface StationStatusFeed extends DataFeed {
-  feed: "station_status"
-  data: StationStatus;
-}
-
-export type CurrentData = GbfsFeed | SystemInfoFeed | StationInfoFeed | StationStatusFeed;
 
 const App: React.FC = () => {
-  const [current, setCurrentData] = React.useState<CurrentData>();
   const [languages, setLanguages] = React.useState<string[]>();
   const [selectedLanguage, setLanguage] = React.useState<string>("en");
+  const [concurrentRequests, setConcurrentRequests] = React.useState<number>(0);
   const [feedList, setFeedList] = React.useState<Feed[]>([]);
+  const [allFeedsData, setAllFeedsData] = React.useState<Partial<FeedMap>>({});
+
+
   const hentData = () => {
-    getJson("https://gbfs.urbansharing.com/oslobysykkel.no/gbfs.json").then((res: Output<Gbfs>) => {
-      setCurrentData(
-        {
-          feed: "gbfs",
-          data: res.data
-        });
+    setConcurrentRequests(concurrentRequests+1);
+    getJson("https://gbfs.urbansharing.com/oslobysykkel.no/gbfs.json").then((res: Output<"gbfs">) => {
+      setAllFeedsData({gbfs: res.data});
       const langList = [];
       for (const lang in res.data) {
         langList.push(lang);
       }
       setLanguages(langList);
       setLanguage(langList[0]);
-      setFeedList(res.data[langList[0]].feeds);
+      setFeedList(res.data[langList[0]].feeds);//TODO burde være i en egen effect
+      setConcurrentRequests(concurrentRequests-1);
     });
   };
 
-  const getTranslation = (key: string) => {
-    return getTableHeader(selectedLanguage, key);
-  };
-  const knappeListe = [{name: "📡 Vis tilgjengelige datakilder 📡", action: hentData}];
+  React.useEffect(() => {
+    if (feedList.length > 0) {
+      let newFeedData= {}as FeedMap;
+        feedList.forEach((feed) => {
+          setConcurrentRequests(concurrentRequests+1);
+        getJson(feed.url).then((res) => {
+          newFeedData[feed.name] = res.data;
+          setAllFeedsData({...allFeedsData, ...newFeedData});
+          setConcurrentRequests(concurrentRequests-1);
+        });
+      })
+    }
+  }, [selectedLanguage, feedList])
+
+  const knappeListe = [{name: "📡 Oppfrisk datakilder 📡", action: hentData}];
 
   return (
     <div className="App">
       <TopMenu languages={languages} language={selectedLanguage} setLanguage={setLanguage} buttonList={knappeListe}/>
       <div className="App-content">
-
-        <Switcher currentData={current} feedList={feedList} changeFeed={setCurrentData}
-                  getTranslation={getTranslation}/>
+        <Switcher loading={concurrentRequests>0} feedList={feedList} allData={allFeedsData} language={selectedLanguage}/>
       </div>
     </div>
   );

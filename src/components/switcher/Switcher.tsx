@@ -1,47 +1,62 @@
 import * as React from 'react';
-import {Feed} from '../../utils/interface';
+import {Feed, FeedMap, FeedTypes} from '../../utils/interface';
 import {TableData} from '../generic-tables/TableData';
 import {KeyValueDataTable} from "../generic-tables/KeyValueDataTable";
-import {CurrentData} from "../app/App";
-import {getJson} from "../../utils/fetch";
-import {StationInfoTable} from "../station-info/StationInfoTable";
+import {getTableHeader} from "../../utils/i18n";
+import {MapSwitch} from "../map-switch/MapSwitch";
+import {CitybikeMap} from "../map/CitybikeMap";
 
 type Props = {
-  currentData?: CurrentData;
   feedList: Feed[];
-  changeFeed: (data: CurrentData) => void;
-  getTranslation: (key: string) => string;
+  allData: Partial<FeedMap>
+  language: string;
+  loading: boolean;
+  errorMessage?: string;
 }
 
-export const Switcher: React.FC<Props> = ({currentData, feedList, changeFeed, getTranslation}) => {
-  if (!currentData) {
+type switcherStates = | FeedTypes;
+
+export const Switcher: React.FC<Props> = ({feedList, allData, language, loading}) => {
+  const [state, setState] = React.useState<switcherStates>("gbfs");
+  const [mapView, setMapView] = React.useState(false);
+
+  React.useEffect(() => {
+    setState("gbfs");
+  }, [loading]);
+
+  if (feedList.length === 0) {
     return <><h3>⛔ Ingen data tilgjengelig. ⛔</h3>
-      <p>Forsøke å tykke «Vis tilgjengelige datakilder»</p>
+      <p>Forsøke å tykke «Oppfrisk datakilder»</p>
     </>
   }
 
-  const onClickFeedType = (feed: Feed) => {
-    getJson(feed.url).then((res) => {
+  if (loading) {
+    return <><h3>Innlasting pågår</h3></>
+  }
 
-      const data: CurrentData = {
-        feed: feed.name,
-        data: res.data
-      };
-      changeFeed(data);
-    })
+  const getTranslation = (key: string) => {
+    return getTableHeader(language, key);//TODO use context
   };
 
+  const onClickFeedType = (feed: Feed) => {
+    setState(feed.name);
+  };
 
-  switch (currentData.feed) {
+  switch (state) {
     case "gbfs":
       return <TableData data={feedList} getTranslation={getTranslation} onSelectRow={onClickFeedType}/>;
     case "station_information":
-      return <StationInfoTable stations={currentData.data.stations} getTranslation={getTranslation}/>
     case "station_status":
-      return <TableData data={currentData.data.stations} getTranslation={getTranslation}/>;
+      return <> <MapSwitch mapView={mapView} setMapView={setMapView}/>
+        {mapView ? <CitybikeMap stationInfo={allData["station_information"]?.stations}
+                                stationStatus={allData["station_status"]?.stations}/> :
+          <TableData data={allData[state]!.stations} getTranslation={getTranslation}/>
+        }
+      </>
     case "system_information":
-      return <KeyValueDataTable data={currentData.data} getTranslation={getTranslation}/>
+      return <KeyValueDataTable data={allData[state]} getTranslation={getTranslation}/>
   }
-  return <h4>Ukjent feed</h4>;
+  console.warn("Ukjent status", state);
+  return <h4>Ukjent status</h4>;
 };
 
