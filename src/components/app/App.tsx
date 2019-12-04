@@ -3,12 +3,7 @@ import './App.css';
 import {
   Feed,
   FeedMap,
-  FeedTypes,
-  Gbfs,
   Output,
-  StationInformation,
-  StationStatus,
-  SystemInformation
 } from "../../utils/interface";
 import {getJson} from "../../utils/fetch";
 import {Switcher} from "../switcher/Switcher";
@@ -20,7 +15,7 @@ const App: React.FC = () => {
   const [concurrentRequests, setConcurrentRequests] = React.useState<number>(0);
   const [feedList, setFeedList] = React.useState<Feed[]>([]);
   const [allFeedsData, setAllFeedsData] = React.useState<Partial<FeedMap>>({});
-
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const hentData = () => {
     setConcurrentRequests(concurrentRequests+1);
@@ -32,8 +27,11 @@ const App: React.FC = () => {
       }
       setLanguages(langList);
       setLanguage(langList[0]);
-      setFeedList(res.data[langList[0]].feeds);//TODO burde være i en egen effect
+      setFeedList(res.data[langList[0]].feeds);
       setConcurrentRequests(concurrentRequests-1);
+      setErrorMessage("");
+    }).catch((e)=>{
+      setErrorMessage(e?.text || "Ukjent feil ved henting av gbfs-listen");
     });
   };
 
@@ -46,7 +44,11 @@ const App: React.FC = () => {
           newFeedData[feed.name] = res.data;
           setAllFeedsData({...allFeedsData, ...newFeedData});
           setConcurrentRequests(concurrentRequests-1);
-        });
+          setErrorMessage("");
+        }).catch((e)=>{
+          console.error(e);
+          setErrorMessage(e?.text || "Ukjent feil ved henting av noen av datakildene");
+        });;
       })
     }
   }, [selectedLanguage, feedList])
@@ -57,7 +59,7 @@ const App: React.FC = () => {
     <div className="App">
       <TopMenu languages={languages} language={selectedLanguage} setLanguage={setLanguage} buttonList={knappeListe}/>
       <div className="App-content">
-        <Switcher loading={concurrentRequests>0} feedList={feedList} allData={allFeedsData} language={selectedLanguage}/>
+        <Switcher errorMessage={errorMessage} loading={concurrentRequests>0} feedList={feedList} allData={allFeedsData} language={selectedLanguage}/>
       </div>
     </div>
   );

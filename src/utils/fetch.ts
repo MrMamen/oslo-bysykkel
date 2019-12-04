@@ -1,15 +1,7 @@
 import Axios, {AxiosResponse} from "axios"
 import {Output} from "./interface";
 
-// export interface Feil {
-//   causeId?: string;
-//   ok: boolean;
-//   status: number;
-//   statusText: string;
-//   error?: string;
-// }
 export const getJson = (url: string) => {
-  // const requestData = generateRequestData(method, payload);
   const headers = new Headers();
   headers.append("Accept", "application/json");
   headers.append("Content-Type", "application/json");

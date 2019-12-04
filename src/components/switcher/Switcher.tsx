@@ -11,18 +11,28 @@ type Props = {
   allData: Partial<FeedMap>
   language: string;
   loading: boolean;
-  errorMessage?: string;
+  errorMessage: string;
 }
 
 type switcherStates = | FeedTypes;
 
-export const Switcher: React.FC<Props> = ({feedList, allData, language, loading}) => {
+export const Switcher: React.FC<Props> = ({feedList, allData, language, loading,errorMessage}) => {
   const [state, setState] = React.useState<switcherStates>("gbfs");
   const [mapView, setMapView] = React.useState(false);
 
   React.useEffect(() => {
     setState("gbfs");
   }, [loading]);
+
+  if (errorMessage){
+    return <><h3>Noe har gått galt.</h3>
+      <p>
+        Har du forsøkt å oppfriske datakildene?
+      </p>
+      <code>{errorMessage}
+      </code>
+    </>
+  }
 
   if (feedList.length === 0) {
     return <><h3>⛔ Ingen data tilgjengelig. ⛔</h3>
@@ -35,7 +45,7 @@ export const Switcher: React.FC<Props> = ({feedList, allData, language, loading}
   }
 
   const getTranslation = (key: string) => {
-    return getTableHeader(language, key);//TODO use context
+    return getTableHeader(language, key);
   };
 
   const onClickFeedType = (feed: Feed) => {
